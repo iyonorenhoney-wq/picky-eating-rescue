@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>偏食レスキュー | 忙しいママの強い味方</title>
+  <meta name="description" content="忙しいママが今日のご飯を10秒で決められる、偏食レスキューツール。" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="mobile-layout">
+
+  <!-- ローディング -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader-content">
+      <span class="loader-emoji">🍱</span>
+      <p>準備中...</p>
+    </div>
+  </div>
+  <script>
+    // Fail-safe: Hide loading overlay even if main scripts fail
+    setTimeout(function() {
+      var loader = document.getElementById('loadingOverlay');
+      if (loader && loader.style.display !== 'none') {
+        loader.style.display = 'none';
+        console.log('Safety loader hide triggered.');
+      }
+    }, 2000);
+  </script>
+
+  <!-- Diagnosis Section -->
+  <section class="diagnosis-section" id="diagnosisSection">
+    <div class="diagnosis-card glass">
+      <div id="quizContainer">
+        <div class="quiz-header">
+          <span class="quiz-badge">無料診断</span>
+          <h2 class="quiz-title">お子様の偏食タイプを診断</h2>
+          <p class="quiz-subtitle">4つの質問で、タイプに合ったレシピを提案します</p>
+        </div>
+        <div id="quizContent">
+          <!-- Questions will be injected here -->
+        </div>
+        <div class="quiz-progress">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="resultContainer" class="hidden">
+        <div class="result-header">
+          <h2 class="result-title">診断結果</h2>
+          <h3 id="typeName" class="type-name"></h3>
+        </div>
+        <p id="typeDesc" class="type-desc"></p>
+        <button id="showRecipesBtn" class="btn btn-primary full-width">
+          おすすめレシピを見る
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <h1 class="logo">偏食<span>レスキュー</span></h1>
+      <button class="cart-btn" id="openCart" aria-label="買い物リスト">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="main" id="mainContent">
+    <!-- 今日のおすすめ (Top Rescue Section) -->
+    <section class="recommend-section" id="recommendSection">
+      <div class="section-label">今日のおすすめレシピ</div>
+      <div id="recipeRescueCard" class="rescue-card fade-in">
+        <!-- JSで描画 -->
+      </div>
+    </section>
+
+    <!-- 検索 & フィルター -->
+    <section class="filter-section">
+      <div class="search-bar">
+        <input type="text" id="recipeSearch" placeholder="食材で探す（にんじん、豆腐など）" aria-label="検索">
+        <span class="search-icon">🔍</span>
+      </div>
+
+      <div class="filter-groups">
+        <!-- 偏食タイプ -->
+        <div class="filter-scroll">
+          <button class="filter-tab active" data-type="type" data-value="all">すべて</button>
+          <button class="filter-tab" data-type="type" data-value="慎重タイプ">慎重</button>
+          <button class="filter-tab" data-type="type" data-value="感覚敏感タイプ">感覚敏感</button>
+          <button class="filter-tab" data-type="type" data-value="集中力切れタイプ">集中力切れ</button>
+          <button class="filter-tab" data-type="type" data-value="好き嫌い固定タイプ">好き嫌い</button>
+        </div>
+
+        <!-- 調理時間 -->
+        <div class="filter-scroll">
+          <button class="filter-chip" data-type="time" data-value="5">5分</button>
+          <button class="filter-chip" data-type="time" data-value="10">10分</button>
+          <button class="filter-chip" data-type="time" data-value="15">15分</button>
+        </div>
+
+        <!-- 料理タイプ -->
+        <div class="filter-scroll">
+          <button class="filter-chip" data-type="style" data-value="ワンパン">ワンパン</button>
+          <button class="filter-chip" data-type="style" data-value="丼">丼</button>
+          <button class="filter-chip" data-type="style" data-value="手づかみ">手づかみ</button>
+          <button class="filter-chip" data-type="style" data-value="おやつ">おやつ</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- レシピ一覧 -->
+    <section class="recipe-list-section">
+      <div class="list-header">
+        <h2 class="sub-title">レシピ一覧</h2>
+        <span class="result-count"><span id="recipeCountNum">0</span> 件</span>
+      </div>
+      <div class="recipe-grid" id="recipeGrid">
+        <!-- JSで描画 -->
+      </div>
+    </section>
+  </main>
+
+  <!-- 買い物リスト Drawer -->
+  <aside class="shopping-cart-drawer" id="cartDrawer">
+    <div class="drawer-overlay" id="closeCartOverlay"></div>
+    <div class="drawer-content">
+      <div class="drawer-header">
+        <h3>🛒 買い物リスト</h3>
+        <button class="close-drawer" id="closeCartBtn">✕</button>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <!-- JSで描画 -->
+      </div>
+      <div class="drawer-footer">
+        <p class="cart-notice">スマホでチェックしながらお買い物！</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- レシピ詳細 Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-container">
+      <button class="modal-close" id="closeModal">✕</button>
+      <div id="modalContent">
+        <!-- JSで描画 -->
+      </div>
+    </div>
+  </div>
+
+  <script src="data/recipes.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
