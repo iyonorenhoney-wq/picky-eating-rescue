@@ -74,6 +74,8 @@ function initApp() {
   renderRecommendation();
   renderRecipes();
   updateCartUI();
+  renderProfile();
+  renderConsultation();
 
   // Search
   const searchInput = document.getElementById('recipeSearch');
@@ -130,6 +132,20 @@ function initApp() {
     if (e.target === document.getElementById('modalOverlay')) closeModal();
   });
 
+  // Random Recipe
+  const randomBtn = document.getElementById('randomRecipeBtn');
+  if (randomBtn) {
+    randomBtn.addEventListener('click', () => {
+      renderRecommendation(true);
+    });
+  }
+
+  // Reset Diagnosis
+  const resetBtn = document.getElementById('resetDiagnosisBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', resetDiagnosis);
+  }
+
   // Loading
   setTimeout(() => {
     const loadingOverlay = document.getElementById('loadingOverlay');
@@ -141,12 +157,17 @@ function initApp() {
 }
 
 /* --- Recommendation --- */
-function renderRecommendation() {
+function renderRecommendation(isRandom = false) {
   const recommendCard = document.getElementById('recipeRescueCard');
   if (!recommendCard) return;
   
-  // 優先的に ID 42 (コーンそぼろ丼) をおすすめ、なければランダム
-  const recipe = recipes.find(r => r.id === 42) || recipes[0];
+  let recipe;
+  if (isRandom) {
+    recipe = recipes[Math.floor(Math.random() * recipes.length)];
+  } else {
+    // 優先的に ID 1 (コーンそぼろ丼) をおすすめ、なければランダム
+    recipe = recipes.find(r => r.id === 1) || recipes[0];
+  }
   
   if (!recipe) return;
 
@@ -387,3 +408,75 @@ function showResult() {
       };
   }
 }
+
+function resetDiagnosis() {
+  if (confirm('診断をやり直しますか？')) {
+    localStorage.removeItem('diagnosis_completed');
+    currentQuestion = 0;
+    scores = {};
+    
+    document.getElementById('diagnosisSection').classList.remove('hidden');
+    document.getElementById('mainContent').classList.add('hidden');
+    document.getElementById('quizContainer').classList.remove('hidden');
+    document.getElementById('resultContainer').classList.add('hidden');
+    
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+/* --- Dynamic UI Injection (Config-driven) --- */
+function renderProfile() {
+  const container = document.getElementById('profileSection');
+  if (!container || !APP_CONFIG.profile) return;
+
+  const p = APP_CONFIG.profile;
+  container.innerHTML = `
+    <div class="profile-card-refined">
+      <div class="profile-image-outer">
+        <img src="${p.image}" alt="${p.name}" class="profile-main-img">
+      </div>
+      <h2 class="profile-main-name">${p.name}</h2>
+      <p class="profile-main-title">${p.title}</p>
+      <p class="profile-main-desc">${p.description}</p>
+      <div class="profile-tag-grid">
+        ${p.badges.map(b => `<span class="profile-tag" style="background:${b.color}">${b.text}</span>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderConsultation() {
+  const container = document.getElementById('consultationSection');
+  if (!container || !APP_CONFIG.consultation) return;
+
+  const c = APP_CONFIG.consultation;
+  container.innerHTML = `
+    <div class="consult-container">
+      <div class="consult-badge-wrap">
+        <span class="consult-mini-badge">💬 ${c.badgeText}</span>
+      </div>
+      <h2 class="consult-title">${c.title}</h2>
+      <p class="consult-subtitle">${c.subtitle}</p>
+      <div class="consult-grid">
+        ${c.cards.map(card => `
+          <div class="consult-card">
+            <span class="consult-card-icon">${card.icon}</span>
+            <p class="consult-card-text">${card.text}</p>
+          </div>
+        `).join('')}
+      </div>
+      <a href="${APP_CONFIG.profile.links.line}" class="btn-line-massive" target="_blank">
+        ${c.buttonText}
+      </a>
+    </div>
+  `;
+}
+
+/* --- Helper: Missing Image Handling --- */
+window.addEventListener('error', function(e) {
+  if (e.target.tagName === 'IMG') {
+    e.target.src = 'https://via.placeholder.com/300x300?text=Recipe+Image';
+    e.target.style.opacity = '0.5';
+  }
+}, true);

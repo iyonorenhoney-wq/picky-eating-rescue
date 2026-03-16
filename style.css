@@ -286,6 +286,150 @@ h1, h2, h3 {
   font-weight: 700;
 }
 
+/* Refined Profile Section */
+.profile-section {
+  padding: 40px var(--spacing-md);
+  text-align: center;
+  background: #fff;
+}
+
+.profile-image-outer {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  border: 4px solid #f9da52; /* Yellow border from screenshot */
+  padding: 5px;
+  background: white;
+}
+
+.profile-main-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-main-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4a3a2a;
+  margin-bottom: 8px;
+}
+
+.profile-main-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #d4a373;
+  margin-bottom: 24px;
+}
+
+.profile-main-desc {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #6a5a4a;
+  max-width: 500px;
+  margin: 0 auto 24px;
+  text-align: left;
+}
+
+.profile-tag-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.profile-tag {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4a3a2a;
+  border: 1px solid #eee;
+}
+
+/* Consultation Section */
+.consultation-section {
+  background: linear-gradient(180deg, #ffd166 0%, #ff9f1c 100%);
+  padding: 60px var(--spacing-md);
+  color: white;
+  text-align: center;
+}
+
+.consult-mini-badge {
+  background: rgba(255,255,255,0.3);
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  display: inline-block;
+}
+
+.consult-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.consult-subtitle {
+  font-size: 14px;
+  line-height: 1.7;
+  opacity: 0.9;
+  margin-bottom: 40px;
+}
+
+.consult-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.consult-card {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  padding: 20px 10px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.consult-card:last-child {
+  grid-column: span 2;
+}
+
+.consult-card-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.consult-card-text {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.btn-line-massive {
+  display: block;
+  background: white;
+  color: #e67e22;
+  text-decoration: none;
+  padding: 18px;
+  border-radius: 40px;
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.btn-line-massive:active {
+  transform: scale(0.98);
+}
 /* Diagnosis Section */
 .diagnosis-section {
   padding: 16px;
@@ -393,6 +537,29 @@ h1, h2, h3 {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+}
+
+.list-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-outline-mini {
+  background: white;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-outline-mini:active {
+  background: var(--primary-light);
+  transform: scale(0.95);
 }
 
 .sub-title {
@@ -660,9 +827,41 @@ h1, h2, h3 {
   padding: 16px;
   border-radius: var(--radius-md);
   font-size: 16px;
-  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.btn-line:hover {
+  background: #05b34c;
+}
+
+.threads-link {
+  display: block;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-light);
+  text-decoration: underline;
+}
+
+/* Section Header Flex */
+.section-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 10px;
+  padding: 4px 8px;
+}
+
+.btn-text:active {
+  opacity: 0.6;
 }
 
 @keyframes fadeIn {
@@ -673,4 +872,151 @@ h1, h2, h3 {
 /* Utils */
 .fade-in {
   animation: fadeIn 0.5s ease forwards;
+}
+/* --- Refined Profile Section --- */
+.profile-section {
+  padding: 40px var(--spacing-md);
+  background: #fff;
+  margin-bottom: 40px;
+}
+
+.profile-card-refined {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.profile-image-outer {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  padding: 5px;
+  background: white;
+  border: 4px solid #FFD700; /* Yellow Border requested */
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-main-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-main-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.profile-main-title {
+  font-size: 14px;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.profile-main-desc {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.profile-tag-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.profile-tag {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* --- Consultation Section --- */
+.consultation-section {
+  padding: 40px var(--spacing-md);
+  background: #fdfaf0;
+}
+
+.consult-container {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.consult-badge-wrap {
+  margin-bottom: 16px;
+}
+
+.consult-mini-badge {
+  background: #FFF9C4;
+  color: #F57F17;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.consult-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.consult-subtitle {
+  font-size: 14px;
+  color: #666; /* explicitly dark */
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.consult-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.consult-card {
+  background: white;
+  padding: 16px 10px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.consult-card-icon {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.consult-card-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: #333; /* explicitly dark */
+}
+
+.btn-line-massive {
+  display: block;
+  background: #06C755;
+  color: white;
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 16px;
+  box-shadow: 0 8px 20px rgba(6, 199, 85, 0.2);
+  transition: transform 0.2s;
+}
+
+.btn-line-massive:active {
+  transform: scale(0.98);
 }

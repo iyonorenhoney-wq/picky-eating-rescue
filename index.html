@@ -78,7 +78,10 @@
   <main class="main" id="mainContent">
     <!-- 今日のおすすめ (Top Rescue Section) -->
     <section class="recommend-section" id="recommendSection">
-      <div class="section-label">今日のおすすめレシピ</div>
+      <div class="section-header-flex">
+        <div class="section-label">今日のおすすめレシピ</div>
+        <button id="randomRecipeBtn" class="btn-text">🎲 他のレシピも見る</button>
+      </div>
       <div id="recipeRescueCard" class="rescue-card fade-in">
         <!-- JSで描画 -->
       </div>
@@ -122,11 +125,23 @@
     <section class="recipe-list-section">
       <div class="list-header">
         <h2 class="sub-title">レシピ一覧</h2>
-        <span class="result-count"><span id="recipeCountNum">0</span> 件</span>
+        <div class="list-header-actions">
+          <button id="resetDiagnosisBtn" class="btn-outline-mini">📋 診断をやり直す</button>
+          <span class="result-count"><span id="recipeCountNum">0</span> 件</span>
+        </div>
       </div>
       <div class="recipe-grid" id="recipeGrid">
         <!-- JSで描画 -->
       </div>
+    </section>
+    <!-- 相談セクション (New) -->
+    <section class="consultation-section" id="consultationSection">
+      <!-- JSで描画 -->
+    </section>
+
+    <!-- Profile Section -->
+    <section class="profile-section" id="profileSection">
+      <!-- JSで描画 -->
     </section>
   </main>
 
@@ -157,6 +172,7 @@
     </div>
   </div>
 
+  <script src="data/config.js"></script>
   <script src="data/recipes.js"></script>
   <script src="script.js"></script>
 </body>
