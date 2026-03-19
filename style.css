@@ -1020,3 +1020,264 @@ h1, h2, h3 {
 .btn-line-massive:active {
   transform: scale(0.98);
 }
+
+/* =============================================
+   Improved Shopping Cart Styles
+   ============================================= */
+
+/* Empty state */
+.cart-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-muted);
+}
+
+.cart-empty-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.cart-empty p {
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* Section labels */
+.cart-section-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-top: 4px;
+}
+
+.cart-item-count {
+  background: var(--primary-light);
+  color: var(--primary-color);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Recipe tags section */
+.cart-recipes-section {
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.cart-recipe-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cart-recipe-tag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--primary-light);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.cart-recipe-remove {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 18px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.cart-recipe-remove:active {
+  background: rgba(255, 142, 114, 0.2);
+}
+
+/* Ingredient list items */
+.cart-ingredients-section {
+  padding-bottom: 8px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 4px;
+  border-bottom: 1px solid #f5f5f5;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s;
+  border-radius: 8px;
+}
+
+.cart-item:active {
+  background: #f9f9f9;
+}
+
+.cart-item-check {
+  font-size: 22px;
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+}
+
+.cart-item-name {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.cart-item-qty {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-color);
+  flex-shrink: 0;
+  background: var(--primary-light);
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
+/* Checked/done state */
+.cart-item--checked .cart-item-name {
+  color: #bbb;
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+.cart-item--checked .cart-item-qty {
+  color: #ccc;
+  background: #f5f5f5;
+}
+
+.cart-item--checked {
+  opacity: 0.65;
+}
+
+/* Divider between unchecked and checked */
+.cart-checked-divider {
+  font-size: 12px;
+  font-weight: 700;
+  color: #aaa;
+  padding: 14px 0 8px;
+  text-align: center;
+}
+
+/* All done celebration */
+.cart-all-done {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--secondary-color);
+  padding: 20px;
+  background: #f0fdf4;
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+}
+
+/* Drawer footer actions */
+.drawer-footer {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+  padding-bottom: 4px;
+  flex-shrink: 0;
+}
+
+.drawer-footer-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.drawer-action-btn {
+  flex: 1;
+  padding: 14px 10px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.drawer-action-btn:active {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
+
+.drawer-action-btn--secondary {
+  background: var(--primary-light);
+  color: var(--primary-color);
+}
+
+.drawer-action-btn--danger {
+  background: #fff0f0;
+  color: #e05252;
+}
+
+.cart-notice {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding-top: 4px;
+}
+
+/* iOS safe-area: prevent buttons from being hidden behind home indicator */
+.drawer-content {
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+}
+
+/* 2-tap confirmation state for danger button */
+.drawer-action-btn--confirming {
+  background: #ffe0e0 !important;
+  color: #c0392b !important;
+  animation: pulse-danger 0.6s ease infinite alternate;
+}
+
+@keyframes pulse-danger {
+  from { opacity: 1; }
+  to   { opacity: 0.75; }
+}
+
+/* Toast notification */
+.cart-toast {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(50, 50, 50, 0.88);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 9999;
+}
+
+.cart-toast--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
