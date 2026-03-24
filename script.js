@@ -299,33 +299,218 @@ function toggleCart(id) {
   closeModal();
 }
 
+/**
+ * Attempts to merge quantities with the same unit.
+ * e.g. "1/4本" + "1/4本" => "1/2本"
+ * Falls back to "1/4本 + 1/4本" if units don't match or parsing fails.
+ */
+function mergeQuantity(q1, q2) {
+  // Fraction helper
+  function parseFraction(str) {
+    str = String(str).trim();
+    const fracMatch = str.match(/^(\d+)\/(\d+)/);
+    if (fracMatch) return parseInt(fracMatch[1]) / parseInt(fracMatch[2]);
+    const numMatch = str.match(/^[\d.]+/);
+    return numMatch ? parseFloat(numMatch[0]) : null;
+  }
+
+  function extractUnit(str) {
+    str = String(str).trim();
+    return str.replace(/^[\d./\s]+/, '').trim();
+  }
+
+  const unit1 = extractUnit(q1);
+  const unit2 = extractUnit(q2);
+
+  if (!unit1 && !unit2) return `${q1} + ${q2}`;
+  if (unit1 !== unit2) return `${q1} + ${q2}`;
+
+  const n1 = parseFraction(q1);
+  const n2 = parseFraction(q2);
+  if (n1 === null || n2 === null) return `${q1} + ${q2}`;
+
+  const sum = n1 + n2;
+  // Convert to fraction if clean, else decimal
+  const tolerance = 0.0001;
+  const denoms = [2, 3, 4, 5, 6, 8];
+  let nice = null;
+  for (const d of denoms) {
+    const n = Math.round(sum * d);
+    if (Math.abs(n / d - sum) < tolerance) {
+      if (n % d === 0) { nice = `${n / d}`; }
+      else { nice = `${n}/${d}`; }
+      break;
+    }
+  }
+  const result = nice || sum.toString();
+  return `${result}${unit1}`;
+}
+
+/**
+ * Merges duplicate ingredient entries across all recipes in cart.
+ * Returns [{name, quantity, checked}]
+ */
+function getMergedIngredients() {
+  const map = {};
+  shoppingCart.forEach(id => {
+    const recipe = recipes.find(r => r.id === id);
+    if (!recipe || !recipe.ingredients) return;
+    recipe.ingredients.forEach(ing => {
+      const key = ing.name;
+      if (map[key]) {
+        map[key].quantity = mergeQuantity(map[key].quantity, ing.quantity);
+      } else {
+        map[key] = { name: ing.name, quantity: ing.quantity };
+      }
+    });
+  });
+  return Object.values(map);
+}
+
+// Tracks checked state of each ingredient by name
+let checkedIngredients = JSON.parse(localStorage.getItem('checkedIngredients') || '{}');
+
 function updateCartUI() {
   const cartCount = document.getElementById('cartCount');
   if (cartCount) cartCount.textContent = shoppingCart.length;
 
   const cartItemsContainer = document.getElementById('cartItems');
   if (!cartItemsContainer) return;
-  
+
   if (shoppingCart.length === 0) {
-    cartItemsContainer.innerHTML = '<p style="text-align:center; padding:40px; color:#999;">リストが空です。レシピを追加してね！</p>';
+    cartItemsContainer.innerHTML = `
+      <div class="cart-empty">
+        <span class="cart-empty-icon">🛒</span>
+        <p>リストが空です。<br>レシピから食材を追加してね！</p>
+      </div>`;
     return;
   }
 
-  const allIngredients = [];
-  shoppingCart.forEach(id => {
-    const recipe = recipes.find(r => r.id === id);
-    if (recipe && recipe.ingredients) {
-      allIngredients.push(...recipe.ingredients);
-    }
-  });
+  const merged = getMergedIngredients();
+  const unchecked = merged.filter(i => !checkedIngredients[i.name]);
+  const checked = merged.filter(i => checkedIngredients[i.name]);
 
-  cartItemsContainer.innerHTML = allIngredients.map((ing, i) => `
-    <div class="cart-item">
-      <input type="checkbox" id="item-${i}">
-      <label class="cart-item-name" for="item-${i}">${ing.name}</label>
-      <span class="cart-item-qty">${ing.quantity}</span>
+  // Recipe list for deletion
+  const recipeList = shoppingCart.map(id => {
+    const r = recipes.find(rx => rx.id === id);
+    return r ? `<div class="cart-recipe-tag">
+      <span>${r.name}</span>
+      <button class="cart-recipe-remove" onclick="removeRecipeFromCart(${id})" aria-label="${r.name}を削除">✕</button>
+    </div>` : '';
+  }).join('');
+
+  const renderItem = (ing) => {
+    const isChecked = !!checkedIngredients[ing.name];
+    const safeKey = ing.name.replace(/"/g, '&quot;');
+    return `
+      <label class="cart-item ${isChecked ? 'cart-item--checked' : ''}" onclick="toggleIngredientCheck('${safeKey}')">
+        <span class="cart-item-check">${isChecked ? '✅' : '⬜'}</span>
+        <span class="cart-item-name">${ing.name}</span>
+        <span class="cart-item-qty">${ing.quantity}</span>
+      </label>`;
+  };
+
+  cartItemsContainer.innerHTML = `
+    <div class="cart-recipes-section">
+      <div class="cart-section-label">📋 選択中のレシピ</div>
+      <div class="cart-recipe-tags">${recipeList}</div>
     </div>
-  `).join('');
+
+    <div class="cart-ingredients-section">
+      <div class="cart-section-label">
+        🛒 買い物リスト
+        <span class="cart-item-count">${unchecked.length}件 残り</span>
+      </div>
+      ${unchecked.length === 0 && checked.length > 0 ? '<div class="cart-all-done">🎉 すべてカゴに入れました！</div>' : ''}
+      ${unchecked.map(renderItem).join('')}
+
+      ${checked.length > 0 ? `
+        <div class="cart-checked-divider">✅ 済み（${checked.length}件）</div>
+        ${checked.map(renderItem).join('')}
+      ` : ''}
+    </div>
+  `;
+}
+
+function toggleIngredientCheck(name) {
+  if (checkedIngredients[name]) {
+    delete checkedIngredients[name];
+  } else {
+    checkedIngredients[name] = true;
+  }
+  localStorage.setItem('checkedIngredients', JSON.stringify(checkedIngredients));
+  updateCartUI();
+}
+
+function removeRecipeFromCart(id) {
+  const index = shoppingCart.indexOf(id);
+  if (index > -1) shoppingCart.splice(index, 1);
+  localStorage.setItem('rescueCart', JSON.stringify(shoppingCart));
+  // Refresh checked state (remove orphan items)
+  const remaining = getMergedIngredients().map(i => i.name);
+  Object.keys(checkedIngredients).forEach(key => {
+    if (!remaining.includes(key)) delete checkedIngredients[key];
+  });
+  localStorage.setItem('checkedIngredients', JSON.stringify(checkedIngredients));
+  updateCartUI();
+}
+
+function clearCheckedItems() {
+  checkedIngredients = {};
+  localStorage.setItem('checkedIngredients', JSON.stringify(checkedIngredients));
+  updateCartUI();
+  showCartToast('✅ チェック済みをリセットしました');
+}
+
+let _clearAllPending = false;
+let _clearAllTimer = null;
+
+function clearAllCart() {
+  const btn = document.querySelector('.drawer-action-btn--danger');
+  if (!btn) return;
+
+  if (_clearAllPending) {
+    // 2nd tap → execute
+    clearTimeout(_clearAllTimer);
+    _clearAllPending = false;
+    if (btn) {
+      btn.textContent = '🗑 全クリア';
+      btn.classList.remove('drawer-action-btn--confirming');
+    }
+    shoppingCart = [];
+    checkedIngredients = {};
+    localStorage.setItem('rescueCart', JSON.stringify(shoppingCart));
+    localStorage.setItem('checkedIngredients', JSON.stringify(checkedIngredients));
+    updateCartUI();
+    showCartToast('🗑 リストをクリアしました');
+  } else {
+    // 1st tap → ask for confirmation
+    _clearAllPending = true;
+    if (btn) {
+      btn.textContent = 'もう一度タップで削除';
+      btn.classList.add('drawer-action-btn--confirming');
+    }
+    _clearAllTimer = setTimeout(() => {
+      _clearAllPending = false;
+      if (btn) {
+        btn.textContent = '🗑 全クリア';
+        btn.classList.remove('drawer-action-btn--confirming');
+      }
+    }, 3000);
+  }
+}
+
+function showCartToast(msg) {
+  let toast = document.getElementById('cartToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'cartToast';
+    toast.className = 'cart-toast';
+    document.getElementById('cartDrawer').appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.classList.add('cart-toast--visible');
+  setTimeout(() => toast.classList.remove('cart-toast--visible'), 2200);
 }
 
 function openCart() {

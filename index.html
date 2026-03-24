@@ -157,7 +157,11 @@
         <!-- JSで描画 -->
       </div>
       <div class="drawer-footer">
-        <p class="cart-notice">スマホでチェックしながらお買い物！</p>
+        <div class="drawer-footer-actions">
+          <button class="drawer-action-btn drawer-action-btn--secondary" onclick="clearCheckedItems()">✅ 済みを削除</button>
+          <button class="drawer-action-btn drawer-action-btn--danger" onclick="clearAllCart()">🗑 全クリア</button>
+        </div>
+        <p class="cart-notice">スーパーで迷わず使える！　片手でチェック✔</p>
       </div>
     </div>
   </aside>
